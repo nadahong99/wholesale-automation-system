@@ -1,0 +1,75 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  api:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+      - ./credentials:/app/credentials
+    depends_on:
+      - redis
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000
+
+  celery-worker:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+      - ./credentials:/app/credentials
+    depends_on:
+      - redis
+    command: celery -A scheduler.celery_app worker --loglevel=info --concurrency=4
+
+  celery-beat:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+      - ./credentials:/app/credentials
+    depends_on:
+      - redis
+    command: celery -A scheduler.celery_app beat --loglevel=info
+
+  telegram-bot:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./logs:/app/logs
+      - ./credentials:/app/credentials
+    depends_on:
+      - redis
+    command: python -c "from integrations.telegram_bot import run_bot; run_bot()"
+
+  dashboard:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./logs:/app/logs
+      - ./credentials:/app/credentials
+    depends_on:
+      - api
+    command: streamlit run monitoring/dashboard.py --server.port 8501 --server.address 0.0.0.0
+
+volumes:
+  redis_data:
