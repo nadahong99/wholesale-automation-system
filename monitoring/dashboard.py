@@ -157,12 +157,19 @@ def main():
     if db:
         db.close()
 
-    # Auto-refresh
-    import time
     st.sidebar.markdown("---")
-    if st.sidebar.button("🔄 새로고침"):
+    refresh_interval = st.sidebar.selectbox(
+        "자동 새로고침 간격",
+        options=[0, 30, 60, 120],
+        format_func=lambda x: "사용 안 함" if x == 0 else f"{x}초",
+        index=2,
+    )
+    if st.sidebar.button("🔄 지금 새로고침"):
         st.rerun()
-    st.sidebar.caption("60초마다 자동 새로고침")
+    if refresh_interval > 0:
+        import time
+        time.sleep(refresh_interval)
+        st.rerun()
 
 
 if __name__ == "__main__":
