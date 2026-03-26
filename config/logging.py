@@ -49,5 +49,5 @@ def setup_logging(name: str = "wholesale", level: int = logging.INFO) -> logging
     return logger
 
 
-def get_logger(name: str) -> logging.Logger:
-    return setup_logging(name)
+def get_logger(name: str, level: int = logging.INFO) -> logging.Logger:
+    return setup_logging(name, level)

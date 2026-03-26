@@ -1,5 +1,6 @@
 # integrations/wholesalers/daemaetopia.py
 """Scraper for Daemaetopia (대매토피아) wholesale site."""
+import re
 from typing import List
 from integrations.wholesalers.base import BaseWholesalerClient, RawProduct
 from config.settings import settings
@@ -63,7 +64,6 @@ class DaemaetopiaClient(BaseWholesalerClient):
                     product_id = ""
                     if link_el:
                         href = link_el.get("href", "")
-                        import re
                         match = re.search(r"product_no=(\d+)", href)
                         if match:
                             product_id = match.group(1)

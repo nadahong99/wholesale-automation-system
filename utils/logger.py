@@ -4,4 +4,4 @@ import logging
 
 
 def get_logger(name: str, level: int = logging.INFO) -> logging.Logger:
-    return _get_logger(name)
+    return _get_logger(name, level)

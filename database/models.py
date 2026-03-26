@@ -60,7 +60,7 @@ class DailyProduct(Base):
     __tablename__ = "daily_products"
 
     id = Column(Integer, primary_key=True, index=True)
-    date = Column(Date, default=datetime.utcnow().date)
+    date = Column(Date, default=lambda: datetime.utcnow().date())
     product_id = Column(Integer, ForeignKey("products.id"))
     search_volume = Column(Integer, default=0)
     product_count_in_market = Column(Integer, default=0)
@@ -96,7 +96,7 @@ class DailyReport(Base):
     __tablename__ = "daily_reports"
 
     id = Column(Integer, primary_key=True, index=True)
-    date = Column(Date, default=datetime.utcnow().date, unique=True)
+    date = Column(Date, default=lambda: datetime.utcnow().date(), unique=True)
     total_sales = Column(Float, default=0.0)
     total_cost = Column(Float, default=0.0)
     total_profit = Column(Float, default=0.0)
@@ -128,7 +128,7 @@ class Budget(Base):
     __tablename__ = "budgets"
 
     id = Column(Integer, primary_key=True, index=True)
-    date = Column(Date, default=datetime.utcnow().date)
+    date = Column(Date, default=lambda: datetime.utcnow().date())
     daily_budget = Column(Float, default=1000000.0)
     spent = Column(Float, default=0.0)
     remaining = Column(Float, default=1000000.0)
