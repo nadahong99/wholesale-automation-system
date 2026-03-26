@@ -9,7 +9,7 @@ T = TypeVar("T")
 
 
 def format_korean_won(amount: float) -> str:
-    """Format an integer amount as Korean Won string."""
+    """Format a numeric amount as Korean Won string."""
     return f"{int(amount):,}원"
 
 
