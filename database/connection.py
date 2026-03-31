@@ -1,1 +1,19 @@
-from sqlalchemy import create_engine\nfrom sqlalchemy.orm import sessionmaker\n\n# Database configuration\nDATABASE_URL = "sqlite:///./test.db"  # Change this to your actual database URL\n\n# Create an engine\ engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})\n\n# Create a configured "Session" class\nSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)\n\n# Create a session\ndef get_db():\n    db = SessionLocal()\n    try:\n        yield db\n    finally:\n        db.close()\n
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+# Database configuration
+DATABASE_URL = "sqlite:///./test.db"
+
+# Create an engine
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+
+# Create a configured "Session" class
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+# Create a session
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
